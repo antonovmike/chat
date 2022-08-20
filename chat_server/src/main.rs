@@ -1,4 +1,3 @@
-// SERVER v2
 #![allow(unused)]
 use std::io::{ErrorKind, Read, Write};
 use std::net::TcpListener;
@@ -17,9 +16,6 @@ const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
 const USER_NAME_SIZE: usize = 16;
 
-// Lift receiver into a Sync type by using Mutex<Receiver<T>>
-// Lift it to a Clone type by using Arc<Mutex<Receiver<T>>
-
 #[tokio::main]
 async fn main() {
     let server = TcpListener::bind(LOCAL).expect("Listener failed to bind");
@@ -28,12 +24,9 @@ async fn main() {
     let mut clients = vec![];
     let mut rt = tokio::runtime::Runtime::new().unwrap();
     let (tx, rx) = mpsc::channel::<String>();
-    //let new_tx = tx.clone();
     
     loop {
         if let Ok((mut socket, addr)) = server.accept() {
-			//let user_name = "UNKNOWN".to_string();
-            //println!("{}", format!("User {} connected", user_name).yellow());
             println!("{}", format!("User's address is {}", addr).yellow());
             let tx1 = tx.clone();
             let tx2 = tx.clone();

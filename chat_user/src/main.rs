@@ -1,4 +1,3 @@
-// USER v2
 #![allow(unused)]
 use std::io::{self, /*ErrorKind, Read,*/ Write};
 use std::net::TcpStream;
@@ -10,7 +9,6 @@ use std::time::Duration;
 // use tokio::io::AsyncWriteExt;
 // use tokio::net::TspStream;
 use colored::Colorize;
-// use std::str::from_utf8;
 
 const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
