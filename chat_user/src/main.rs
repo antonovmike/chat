@@ -4,11 +4,14 @@ use std::net::TcpStream;
 use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
+use chat_user::User_Data;
 // use futures::prelude::*;
 // use tokio::prelude::*;
 // use tokio::io::AsyncWriteExt;
 // use tokio::net::TspStream;
 use colored::Colorize;
+
+mod lib;
 
 const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
@@ -23,6 +26,12 @@ fn main() {
 	io::stdin().read_line(&mut user_name).expect("Failed to read line");
     user_name.pop();
 	
+    // let user_data = lib::User_Data {
+    //     name: user_name.clone(),
+    //     message: "user_message".to_string(),
+    // };
+    // println!("{:?}", user_data);
+
     let mut client = TcpStream::connect(LOCAL).expect("Stream failed to connect");
     client.set_nonblocking(true).expect("Failed to initiate non-blocking");
 
@@ -35,7 +44,12 @@ fn main() {
                 let mut buff_message = user_message.clone().into_bytes();
                 buff_message.resize(MSG_SIZE, 0);
                 client.write_all(&buff_message).expect("Writing to socket failed");
-                println!("{}", format!("{}: {:?}", user_name, user_message).bold().on_blue());
+                println!("{}", format!("{}: {:?}", user_name, user_message).bold().on_blue());	
+                let user_data = lib::User_Data {
+                    name: user_name.clone(),
+                    message: user_message.clone(),
+                };
+                println!("{:?}", user_data);
             },
             Err(TryRecvError::Empty) => (),
             Err(TryRecvError::Disconnected) => break
@@ -43,6 +57,7 @@ fn main() {
 
         thread::sleep(Duration::from_millis(100));
     });
+
     println!("{}", "Write a message:".bold().on_green());
     loop{
         let mut buff_message = String::new();
