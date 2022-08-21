@@ -4,7 +4,7 @@ use std::net::TcpStream;
 use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
-use chat_user::User_Data;
+use chat_user::UserData;
 // use futures::prelude::*;
 // use tokio::prelude::*;
 // use tokio::io::AsyncWriteExt;
@@ -26,7 +26,7 @@ fn main() {
 	io::stdin().read_line(&mut user_name).expect("Failed to read line");
     user_name.pop();
 	
-    // let user_data = lib::User_Data {
+    // let user_data = lib::UserData {
     //     name: user_name.clone(),
     //     message: "user_message".to_string(),
     // };
@@ -45,7 +45,7 @@ fn main() {
                 buff_message.resize(MSG_SIZE, 0);
                 client.write_all(&buff_message).expect("Writing to socket failed");
                 println!("{}", format!("{}: {:?}", user_name, user_message).bold().on_blue());	
-                let user_data = lib::User_Data {
+                let user_data = lib::UserData {
                     name: user_name.clone(),
                     message: user_message.clone(),
                 };
