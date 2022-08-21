@@ -27,6 +27,7 @@ fn main() {
 
     let (tx, rx) = mpsc::channel::<String>();
 
+    // SENDS DATA TO SERVER
     thread::spawn(move || loop {
         match rx.try_recv() {
             Ok(user_message) => {
@@ -38,7 +39,7 @@ fn main() {
                     name: user_name.clone(),
                     message: user_message.clone(),
                 };
-                println!("{:?}", user_data);
+                // println!("{:?}", user_data);
             },
             Err(TryRecvError::Empty) => (),
             Err(TryRecvError::Disconnected) => break

@@ -16,8 +16,8 @@ const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
 const USER_NAME_SIZE: usize = 16;
 
-#[tokio::main]
-async fn main() {
+// #[tokio::main]
+/*async*/ fn main() {
     let server = TcpListener::bind(LOCAL).expect("Listener failed to bind");
     server.set_nonblocking(true).expect("Failed to initialize non-blocking");
 
