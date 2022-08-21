@@ -10,6 +10,6 @@ pub struct UserData {
 
 #[derive(Debug)]
 pub struct UserID {
-    pub id: u16,
+    pub id: String,
     pub data: UserData,
 }

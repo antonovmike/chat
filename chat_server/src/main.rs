@@ -13,8 +13,8 @@ use crate::lib::{UserData, UserID};
 //use tokio::task; // let concurrent_future = task::spawn(our_async_program());
 use colored::Colorize;
 use serde_json;
-use serde::Deserialize;
-use serde::de::{self, Visitor};
+// use serde::Deserialize;
+// use serde::de::{self, Visitor};
 
 mod lib;
 
@@ -45,15 +45,20 @@ const USER_NAME_SIZE: usize = 16;
                     Ok(_) => {
                         let user_name = buff_name.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
                         let user_name = String::from_utf8(user_name).expect("Invalid utf8 message");
-                        // dbg!(&user_name);
+
                         tx2.send(user_name).expect("Failed to send message to rx");
                         
                         let user_message = buff_message.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
                         let mut user_message = String::from_utf8(user_message).expect("Invalid utf8 message");
                         user_message.pop();
-                        println!("user_message: {}", user_message);
+
                         let deserialized: UserData = serde_json::from_str(&user_message).expect("Could not read");
-                        println!("deserialized: {:?}", deserialized);
+
+                        let user_id: UserID = lib::UserID {
+                            id: addr.to_string(),
+                            data: deserialized,
+                        };
+                        println!("{1} (UserID: {0}) said: \n\"{2}\"", user_id.id, user_id.data.name, user_id.data.message);
 
 						println!("{}:", format!("User {} said", addr).bold().yellow());
                         println!("{}", format!("{}", user_message).italic().on_green());
