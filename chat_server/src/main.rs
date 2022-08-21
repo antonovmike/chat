@@ -39,7 +39,7 @@ const USER_NAME_SIZE: usize = 16;
                     Ok(_) => {
                         let user_name = buff_name.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
                         let user_name = String::from_utf8(user_name).expect("Invalid utf8 message");
-                        dbg!(&user_name);
+                        // dbg!(&user_name);
                         tx2.send(user_name).expect("Failed to send message to rx");
                         
                         let user_message = buff_message.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
@@ -60,7 +60,7 @@ const USER_NAME_SIZE: usize = 16;
         }
 
         if let Ok(user_message) = rx.try_recv() {
-			dbg!(&user_message);
+			// dbg!(&user_message);
             clients = clients.into_iter().filter_map(|mut client| {
                 let mut buff_message = user_message.clone().into_bytes();
                 buff_message.resize(MSG_SIZE, 0);
@@ -70,7 +70,7 @@ const USER_NAME_SIZE: usize = 16;
         }
         
         if let Ok(user_name) = rx.try_recv() {
-			dbg!(&user_name);
+			// dbg!(&user_name);
             clients = clients.into_iter().filter_map(|mut client| {
                 let mut buff_name = user_name.clone().into_bytes();
                 buff_name.resize(USER_NAME_SIZE, 0);

@@ -9,6 +9,7 @@ use std::time::Duration;
 // use tokio::io::AsyncWriteExt;
 // use tokio::net::TspStream;
 use colored::Colorize;
+use serde_json::{Result, Value};
 
 mod lib;
 
@@ -33,13 +34,16 @@ fn main() {
             Ok(user_message) => {
                 let mut buff_message = user_message.clone().into_bytes();
                 buff_message.resize(MSG_SIZE, 0);
-                client.write_all(&buff_message).expect("Writing to socket failed");
+                // client.write_all(&buff_message).expect("Writing to socket failed");
                 println!("{}", format!("{}: {:?}", user_name, user_message).bold().on_blue());	
+
                 let user_data = lib::UserData {
                     name: user_name.clone(),
                     message: user_message.clone(),
                 };
-                // println!("{:?}", user_data);
+                let serialized = serde_json::to_string(&user_data).unwrap().clone().into_bytes();
+                // println!("serialized: {:?}", serialized);
+                client.write_all(&serialized).expect("Writing to socket failed");
             },
             Err(TryRecvError::Empty) => (),
             Err(TryRecvError::Disconnected) => break
