@@ -14,7 +14,7 @@ use serde_json::{Result, Value};
 mod lib;
 
 const LOCAL: &str = "127.0.0.1:6000";
-const MSG_SIZE: usize = 32;
+const MSG_SIZE: usize = 64;
 const USER_NAME_SIZE: usize = 16;
 
 fn main() {
@@ -41,6 +41,7 @@ fn main() {
                     name: user_name.clone(),
                     message: user_message.clone(),
                 };
+                println!("user_data: {:?}", user_data);
                 let serialized = serde_json::to_string(&user_data).unwrap().clone().into_bytes();
                 // println!("serialized: {:?}", serialized);
                 client.write_all(&serialized).expect("Writing to socket failed");

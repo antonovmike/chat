@@ -1,9 +1,10 @@
-// #![allow(unused)]
+#![allow(unused)]
 use std::io::{ErrorKind, Read, Write};
 use std::net::TcpListener;
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
+use crate::lib::{UserData, UserID};
 //use futures::prelude::*;
 //use tokio::prelude::*;
 //use tokio::io::AsyncWriteExt;
@@ -11,6 +12,11 @@ use std::time::Duration;
 //use tokio::net::TcpListener;
 //use tokio::task; // let concurrent_future = task::spawn(our_async_program());
 use colored::Colorize;
+use serde_json;
+use serde::Deserialize;
+use serde::de::{self, Visitor};
+
+mod lib;
 
 const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
@@ -43,8 +49,12 @@ const USER_NAME_SIZE: usize = 16;
                         tx2.send(user_name).expect("Failed to send message to rx");
                         
                         let user_message = buff_message.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
-                        let user_message = String::from_utf8(user_message).expect("Invalid utf8 message");
-                        
+                        let mut user_message = String::from_utf8(user_message).expect("Invalid utf8 message");
+                        user_message.pop();
+                        println!("user_message: {}", user_message);
+                        let deserialized: UserData = serde_json::from_str(&user_message).expect("Could not read");
+                        println!("deserialized: {:?}", deserialized);
+
 						println!("{}:", format!("User {} said", addr).bold().yellow());
                         println!("{}", format!("{}", user_message).italic().on_green());
                         tx1.send(user_message).expect("Failed to send message to rx");
