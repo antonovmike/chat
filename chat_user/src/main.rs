@@ -14,8 +14,8 @@ const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
 const USER_NAME_SIZE: usize = 16;
 
-fn parse(s: String) -> Vec<u8> {
-    s.chars().filter(|c| *c != '\n').map(|c| c as u8).collect()
+fn parse(a: String) -> Vec<u8> {
+    a.chars().filter(|b| *b != '\n').map(|c| c as u8).collect()
 }
 fn main() {
     println!("{}", "Enter your name".bold().on_green());
@@ -43,7 +43,6 @@ fn main() {
 
         thread::sleep(Duration::from_millis(100));
     });
-
     println!("{}", "Write a message:".bold().on_green());
     loop{
         let mut buff_message = String::new();
@@ -52,4 +51,11 @@ fn main() {
         if user_message == ":quit" || tx.send(user_message).is_err() { break }
     }
     println!("{}", "Bye".bold().on_blue());
+
+    loop{
+        let mut buff_name = String::new();
+        io::stdin().read_line(&mut buff_name).expect("Reading from stdin failed");
+        let mut user_name = buff_name.trim().to_string();
+        if user_name == ":quit" || tx.send(user_name).is_err() { break }
+    }
 }

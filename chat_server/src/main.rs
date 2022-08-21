@@ -39,11 +39,11 @@ async fn main() {
                     Ok(_) => {
                         let user_name = buff_name.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
                         let user_name = String::from_utf8(user_name).expect("Invalid utf8 message");
-                        dbg!(&user_name);
                         tx2.send(user_name).expect("Failed to send message to rx");
+                        
                         let user_message = buff_message.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
                         let user_message = String::from_utf8(user_message).expect("Invalid utf8 message");
-                        dbg!(&user_message);
+                        
 						println!("{}:", format!("User {} said", addr).bold().yellow());
                         println!("{}", format!("{}", user_message).italic().on_green());
                         tx1.send(user_message).expect("Failed to send message to rx");
