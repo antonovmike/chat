@@ -14,9 +14,6 @@ const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
 const USER_NAME_SIZE: usize = 16;
 
-fn parse(a: String) -> Vec<u8> {
-    a.chars().filter(|b| *b != '\n').map(|c| c as u8).collect()
-}
 fn main() {
     println!("{}", "Enter your name".bold().on_green());
 	let mut user_name = String::new();
@@ -27,7 +24,7 @@ fn main() {
     client.set_nonblocking(true).expect("Failed to initiate non-blocking");
 
     let (tx, rx) = mpsc::channel::<String>();
-    let new_tx = tx.clone();
+    // let new_tx = tx.clone();
 
     thread::spawn(move || loop {
         match rx.try_recv() {
@@ -47,7 +44,7 @@ fn main() {
     loop{
         let mut buff_message = String::new();
         io::stdin().read_line(&mut buff_message).expect("Reading from stdin failed");
-        let mut user_message = buff_message.trim().to_string();
+        let user_message = buff_message.trim().to_string();
         if user_message == ":quit" || tx.send(user_message).is_err() { break }
     }
     println!("{}", "Bye".bold().on_blue());
@@ -55,7 +52,7 @@ fn main() {
     loop{
         let mut buff_name = String::new();
         io::stdin().read_line(&mut buff_name).expect("Reading from stdin failed");
-        let mut user_name = buff_name.trim().to_string();
+        let user_name = buff_name.trim().to_string();
         if user_name == ":quit" || tx.send(user_name).is_err() { break }
     }
 }

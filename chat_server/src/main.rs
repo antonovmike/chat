@@ -22,7 +22,7 @@ async fn main() {
     server.set_nonblocking(true).expect("Failed to initialize non-blocking");
 
     let mut clients = vec![];
-    let mut rt = tokio::runtime::Runtime::new().unwrap();
+    // let mut rt = tokio::runtime::Runtime::new().unwrap();
     let (tx, rx) = mpsc::channel::<String>();
     
     loop {
@@ -33,7 +33,7 @@ async fn main() {
             clients.push(socket.try_clone().expect("Failed to clone client"));
 
             thread::spawn(move || loop {
-				let mut buff_name = vec![0; USER_NAME_SIZE];
+				let buff_name = vec![0; USER_NAME_SIZE];
                 let mut buff_message = vec![0; MSG_SIZE];
                 match socket.read_exact(&mut buff_message) {
                     Ok(_) => {
