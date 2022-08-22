@@ -5,12 +5,6 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 use crate::lib::{UserData, UserID};
-//use futures::prelude::*;
-//use tokio::prelude::*;
-//use tokio::io::AsyncWriteExt;
-//use tokio::net::TspStream;
-//use tokio::net::TcpListener;
-//use tokio::task; // let concurrent_future = task::spawn(our_async_program());
 use colored::Colorize;
 use serde_json;
 // use serde::Deserialize;
@@ -33,7 +27,6 @@ const USER_NAME_SIZE: usize = 16;
     
     loop {
         if let Ok((mut socket, addr)) = server.accept() {
-            println!("{}", format!("User's address is {}", addr).yellow());
             let tx1 = tx.clone();
             let tx2 = tx.clone();
             clients.push(socket.try_clone().expect("Failed to clone client"));
@@ -64,10 +57,14 @@ const USER_NAME_SIZE: usize = 16;
                             id: addr.to_string(),
                             data: deserialized,
                         };
-                        println!("{1} (UserID: {0}) said: \n\"{2}\"", user_id.id, user_id.data.name, user_id.data.message);
 
-						println!("{}:", format!("User {} said", addr).bold().yellow());
-                        println!("{}", format!("{}", user_message).italic().on_green());
+                        println!("{} {} {} \n{}", 
+                            format!("{}", user_id.data.name).bold().yellow(),
+                            format!("(ID: {})", user_id.id).bold().purple(),
+                            format!("said:").bold().yellow(),
+                            format!("\"{}\"", user_id.data.message).italic().on_green()
+                        );
+
                         tx1.send(user_message).expect("Failed to send message to rx");
                     },
                     Err(ref err) if err.kind() == ErrorKind::WouldBlock => (),
