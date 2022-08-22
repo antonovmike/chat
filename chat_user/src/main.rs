@@ -4,10 +4,6 @@ use std::net::TcpStream;
 use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
-// use futures::prelude::*;
-// use tokio::prelude::*;
-// use tokio::io::AsyncWriteExt;
-// use tokio::net::TspStream;
 use colored::Colorize;
 use serde_json::{Result, Value};
 
@@ -42,7 +38,10 @@ fn main() {
                     message: user_message.clone(),
                 };
                 println!("user_data: {:?}", user_data);
-                let serialized = serde_json::to_string(&user_data).unwrap().clone().into_bytes();
+                let serialized = serde_json::to_string(&user_data)
+                    .unwrap()
+                    .clone()
+                    .into_bytes();
                 // println!("serialized: {:?}", serialized);
                 client.write_all(&serialized).expect("Writing to socket failed");
             },

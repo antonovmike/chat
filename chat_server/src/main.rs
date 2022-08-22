@@ -43,12 +43,18 @@ const USER_NAME_SIZE: usize = 16;
                 let mut buff_message = vec![0; MSG_SIZE];
                 match socket.read_exact(&mut buff_message) {
                     Ok(_) => {
-                        let user_name = buff_name.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
+                        let user_name = buff_name
+                            .into_iter()
+                            .take_while(|&x| x != 0)
+                            .collect::<Vec<_>>();
                         let user_name = String::from_utf8(user_name).expect("Invalid utf8 message");
 
                         tx2.send(user_name).expect("Failed to send message to rx");
                         
-                        let user_message = buff_message.into_iter().take_while(|&x| x != 0).collect::<Vec<_>>();
+                        let user_message = buff_message
+                            .into_iter()
+                            .take_while(|&x| x != 0)
+                            .collect::<Vec<_>>();
                         let mut user_message = String::from_utf8(user_message).expect("Invalid utf8 message");
                         user_message.pop();
 
