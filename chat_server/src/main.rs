@@ -50,8 +50,12 @@ const USER_NAME_SIZE: usize = 16;
                             .collect::<Vec<_>>();
                         let mut user_message = String::from_utf8(user_message).expect("Invalid utf8 message");
                         user_message.pop();
+                        println!("LAST CHAR: {}", user_message.chars().last().unwrap());
 
-                        dbg!(&user_message);
+                        if user_message.chars().last().unwrap() == '{' {
+                            user_message.pop();
+                            user_message = format!("{}{}", '{', user_message);
+                        }
 
                         let deserialized: UserData = serde_json::from_str(&user_message).expect("Could not read");
 

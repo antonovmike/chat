@@ -42,7 +42,7 @@ fn main() {
                     .unwrap()
                     .clone()
                     .into_bytes();
-                // println!("serialized: {:?}", serialized);
+                // dbg!(&serialized);
                 client.write_all(&serialized).expect("Writing to socket failed");
             },
             Err(TryRecvError::Empty) => (),
