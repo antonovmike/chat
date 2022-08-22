@@ -4,10 +4,6 @@ use std::net::TcpStream;
 use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
-// use futures::prelude::*;
-// use tokio::prelude::*;
-// use tokio::io::AsyncWriteExt;
-// use tokio::net::TspStream;
 use colored::Colorize;
 
 const LOCAL: &str = "127.0.0.1:6000";
