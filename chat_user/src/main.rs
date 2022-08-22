@@ -28,8 +28,8 @@ fn main() {
     thread::spawn(move || loop {
         match rx.try_recv() {
             Ok(user_message) => {
-                let mut buff_message = user_message.clone().into_bytes();
-                buff_message.resize(MSG_SIZE, 0);
+                // let mut buff_message = user_message.clone().into_bytes();
+                // buff_message.resize(MSG_SIZE, 0);
                 // client.write_all(&buff_message).expect("Writing to socket failed");
                 println!("{}", format!("{}: {:?}", user_name, user_message).bold().on_blue());	
 
