@@ -2,7 +2,7 @@
 use std::iter::Map;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct UserData {
     pub name: String,
     pub message: String,

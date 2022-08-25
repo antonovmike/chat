@@ -12,6 +12,7 @@ mod lib;
 const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 64;
 const USER_NAME_SIZE: usize = 16;
+const STRUCT_SIZE: usize = 96;
 
 fn main() {
     println!("{}", "Enter your name".bold().on_green());
@@ -31,7 +32,7 @@ fn main() {
                 // let mut buff_message = user_message.clone().into_bytes();
                 // buff_message.resize(MSG_SIZE, 0);
                 // client.write_all(&buff_message).expect("Writing to socket failed");
-                println!("{}", format!("{}: {:?}", user_name, user_message).bold().on_blue());	
+                // println!("{}", format!("{}: {:?}", user_name, user_message).bold().on_blue());	
 
                 let user_data = lib::UserData {
                     name: user_name.clone(),
@@ -42,8 +43,11 @@ fn main() {
                     .unwrap()
                     .clone()
                     .into_bytes();
-                // dbg!(&serialized);
-                client.write_all(&serialized).expect("Writing to socket failed");
+                println!("{:?}", &serialized);
+                let mut buff_serde = serialized.clone();
+                buff_serde.resize(STRUCT_SIZE, 0);
+                // client.write_all(&serialized).expect("Writing to socket failed");
+                client.write_all(&buff_serde).expect("Writing to socket failed");
             },
             Err(TryRecvError::Empty) => (),
             Err(TryRecvError::Disconnected) => break
