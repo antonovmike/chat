@@ -18,7 +18,7 @@ const STRUCT_SIZE: usize = 96;
     server.set_nonblocking(true).expect("Failed to initialize non-blocking");
 
     let mut clients = vec![];
-    let (tx, rx) = mpsc::channel::<String>();
+    let (tx, _rx) = mpsc::channel::<String>();
     
     loop {
         if let Ok((mut socket, addr)) = server.accept() {
