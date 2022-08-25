@@ -1,4 +1,4 @@
-use std::io::{ErrorKind, Read, Write};
+use std::io::{ErrorKind, Read};
 use std::net::TcpListener;
 use std::sync::mpsc;
 use std::thread;
@@ -10,8 +10,6 @@ use serde_json;
 mod lib;
 
 const LOCAL: &str = "127.0.0.1:6000";
-const MSG_SIZE: usize = 32;
-const USER_NAME_SIZE: usize = 16;
 const STRUCT_SIZE: usize = 96;
 
 // #[tokio::main]
@@ -61,24 +59,6 @@ const STRUCT_SIZE: usize = 96;
                 }
                 sleep();
             });
-        }
-
-        if let Ok(user_message) = rx.try_recv() {
-            clients = clients.into_iter().filter_map(|mut client| {
-                let mut buff_message = user_message.clone().into_bytes();
-                buff_message.resize(MSG_SIZE, 0);
-                client.write_all(&buff_message).map(|_| client).ok()
-            })
-                .collect::<Vec<_>>();
-        }
-        
-        if let Ok(user_name) = rx.try_recv() {
-            clients = clients.into_iter().filter_map(|mut client| {
-                let mut buff_name = user_name.clone().into_bytes();
-                buff_name.resize(USER_NAME_SIZE, 0);
-                client.write_all(&buff_name).map(|_| client).ok()
-            })
-                .collect::<Vec<_>>();
         }
 
         sleep();
