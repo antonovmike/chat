@@ -1,4 +1,3 @@
-#![allow(unused)]
 use std::io::{ErrorKind, Read, Write};
 use std::net::TcpListener;
 use std::sync::mpsc;
@@ -29,8 +28,6 @@ const STRUCT_SIZE: usize = 96;
             clients.push(socket.try_clone().expect("Failed to clone client"));
 
             thread::spawn(move || loop {
-				let buff_name = vec![0; USER_NAME_SIZE];
-                let mut buff_message = vec![0; MSG_SIZE];
                 let mut buff_serde = vec![0; STRUCT_SIZE];
                 match socket.read_exact(&mut buff_serde) {
                     Ok(_) => {
@@ -38,7 +35,7 @@ const STRUCT_SIZE: usize = 96;
                             .into_iter()
                             .take_while(|&x| x != 0)
                             .collect::<Vec<_>>();
-                        let mut serde_message = String::from_utf8(serde_content).expect("Invalid utf8 message");
+                        let serde_message = String::from_utf8(serde_content).expect("Invalid utf8 message");
 
                         let deserialized: UserData = serde_json::from_str(&serde_message).expect("Could not read");
 

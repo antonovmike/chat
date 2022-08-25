@@ -1,17 +1,13 @@
-#![allow(unused)]
-use std::io::{self, /*ErrorKind, Read,*/ Write};
+use std::io::{self, Write};
 use std::net::TcpStream;
 use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
 use colored::Colorize;
-use serde_json::{Result, Value};
 
 mod lib;
 
 const LOCAL: &str = "127.0.0.1:6000";
-const MSG_SIZE: usize = 64;
-const USER_NAME_SIZE: usize = 16;
 const STRUCT_SIZE: usize = 96;
 
 fn main() {
