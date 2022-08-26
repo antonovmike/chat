@@ -11,7 +11,7 @@ const LOCAL: &str = "127.0.0.1:6000";
 const STRUCT_SIZE: usize = 96;
 
 fn main() {
-    println!("{}", "Enter your name".bold().on_green());
+    println!("{}", "Enter your name".bold().on_yellow());
 	let mut user_name = String::new();
 	io::stdin().read_line(&mut user_name).expect("Failed to read line");
     user_name.pop();
