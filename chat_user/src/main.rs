@@ -55,11 +55,4 @@ fn main() {
         if user_message == ":quit" || tx.send(user_message).is_err() { break }
     }
     println!("{}", "Bye".bold().on_blue());
-
-    loop{
-        let mut buff_name = String::new();
-        io::stdin().read_line(&mut buff_name).expect("Reading from stdin failed");
-        let user_name = buff_name.trim().to_string();
-        if user_name == ":quit" || tx.send(user_name).is_err() { break }
-    }
 }
