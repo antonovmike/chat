@@ -14,7 +14,6 @@ fn sleep() {
 }
 
 pub fn receiver(server: TcpListener) {
-
     let mut clients = vec![];
     let (tx, _rx) = mpsc::channel::<String>();
     
