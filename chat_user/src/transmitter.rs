@@ -5,6 +5,7 @@ use std::thread;
 use std::time::Duration;
 use colored::Colorize;
 use crate::structures::UserData;
+use std::collections::HashMap;
 
 const STRUCT_SIZE: usize = 96;
 
@@ -13,6 +14,9 @@ pub fn transmitter(mut client: TcpStream) {
 	let mut user_name = String::new();
 	io::stdin().read_line(&mut user_name).expect("Failed to read line");
     user_name.pop();
+
+    let mut name_and_message = HashMap::new();
+    name_and_message.insert(String::from("Mike"), String::from(""));
 
     let (tx, rx) = mpsc::channel::<String>();
 
