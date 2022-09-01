@@ -3,15 +3,13 @@ use std::net::TcpListener;
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
-use crate::lib::{UserData, UserID};
+use crate::structures::{UserData, UserID};
 use colored::Colorize;
 use serde_json;
 
 const STRUCT_SIZE: usize = 96;
 
-fn sleep() {
-    thread::sleep(Duration::from_millis(100));
-}
+fn sleep() { thread::sleep(Duration::from_millis(100)); }
 
 pub fn receiver(server: TcpListener) {
     let mut clients = vec![];

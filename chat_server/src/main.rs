@@ -1,6 +1,6 @@
 use std::net::TcpListener;
 
-mod lib;
+mod structures;
 mod receiver;
 
 const LOCAL: &str = "127.0.0.1:6000";

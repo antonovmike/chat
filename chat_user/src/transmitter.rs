@@ -4,7 +4,7 @@ use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
 use colored::Colorize;
-use crate::lib::UserData;
+use crate::structures::UserData;
 
 const STRUCT_SIZE: usize = 96;
 
