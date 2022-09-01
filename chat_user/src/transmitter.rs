@@ -16,7 +16,6 @@ pub fn transmitter(mut client: TcpStream) {
     user_name.pop();
 
     let mut name_and_message = HashMap::new();
-    name_and_message.insert(String::from("Mike"), String::from(""));
 
     let (tx, rx) = mpsc::channel::<String>();
 
@@ -27,6 +26,8 @@ pub fn transmitter(mut client: TcpStream) {
                     name: user_name.clone(),
                     message: user_message.clone(),
                 };
+
+                name_and_message.insert(user_name.clone(), user_message.clone());
 
                 let serialized = serde_json::to_string(&user_data)
                     .unwrap()
