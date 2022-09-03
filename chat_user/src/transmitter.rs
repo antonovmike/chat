@@ -6,7 +6,7 @@ use std::time::Duration;
 use colored::Colorize;
 use crate::lib::UserData;
 
-const STRUCT_SIZE: usize = 96;
+const DATA_SIZE: usize = 96;
 
 pub fn transmitter(mut client: TcpStream) {
     println!("{}", "Enter your name".bold().on_yellow());
@@ -30,7 +30,7 @@ pub fn transmitter(mut client: TcpStream) {
                     .into_bytes();
 
                 let mut buff_serde = serialized.clone();
-                buff_serde.resize(STRUCT_SIZE, 0);
+                buff_serde.resize(DATA_SIZE, 0);
 
                 client.write_all(&buff_serde).expect("Writing to socket failed");
             },
