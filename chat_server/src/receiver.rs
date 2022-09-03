@@ -32,13 +32,10 @@ pub fn receiver(server: TcpListener) {
                         let serde_message = String::from_utf8(serde_content).expect("Invalid utf8 message");
 
                         let name_and_message: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
-                        println!("{} {} said: ", name_and_message["Mike"], addr.to_string());
-                        // let deserialized: UserData = serde_json::from_str(&serde_message).expect("Could not read");
 
-                        // let user_id: UserID = UserID {
-                        //     id: addr.to_string(),
-                        //     data: deserialized,
-                        // };
+                        for (key, value) in &name_and_message {
+                            println!("{} (id {}): \n{}", key, addr.to_string(), value);
+                        }
 
                         // println!("{} {} {} \n{}", 
                         //     format!("{}", user_id.data.name).bold().yellow(),
