@@ -29,7 +29,7 @@ pub fn transmitter(mut client: TcpStream) {
 
                 name_and_message.insert(user_name.clone(), user_message.clone());
 
-                let serialized = serde_json::to_string(&user_data)
+                let serialized = serde_json::to_string(&name_and_message)
                     .unwrap()
                     .clone()
                     .into_bytes();

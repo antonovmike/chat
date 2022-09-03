@@ -6,6 +6,7 @@ use std::time::Duration;
 use crate::structures::{UserData, UserID};
 use colored::Colorize;
 use serde_json;
+use std::collections::HashMap;
 
 const STRUCT_SIZE: usize = 96;
 
@@ -30,19 +31,21 @@ pub fn receiver(server: TcpListener) {
                             .collect::<Vec<_>>();
                         let serde_message = String::from_utf8(serde_content).expect("Invalid utf8 message");
 
-                        let deserialized: UserData = serde_json::from_str(&serde_message).expect("Could not read");
+                        let mut name_and_message: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
+                        println!("{} {} said: ", name_and_message["Mike"], addr.to_string());
+                        // let deserialized: UserData = serde_json::from_str(&serde_message).expect("Could not read");
 
-                        let user_id: UserID = UserID {
-                            id: addr.to_string(),
-                            data: deserialized,
-                        };
+                        // let user_id: UserID = UserID {
+                        //     id: addr.to_string(),
+                        //     data: deserialized,
+                        // };
 
-                        println!("{} {} {} \n{}", 
-                            format!("{}", user_id.data.name).bold().yellow(),
-                            format!("(ID: {})", user_id.id).bold().purple(),
-                            format!("said:").bold().yellow(),
-                            format!("\"{}\"", user_id.data.message).italic().on_green()
-                        );
+                        // println!("{} {} {} \n{}", 
+                        //     format!("{}", user_id.data.name).bold().yellow(),
+                        //     format!("(ID: {})", user_id.id).bold().purple(),
+                        //     format!("said:").bold().yellow(),
+                        //     format!("\"{}\"", user_id.data.message).italic().on_green()
+                        // );
 
                         tx1.send(serde_message).expect("Failed to send message to rx");
                     },
