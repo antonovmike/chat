@@ -30,9 +30,9 @@ pub fn receiver(server: TcpListener) {
                             .collect::<Vec<_>>();
                         let serde_message = String::from_utf8(serde_content).expect("Invalid utf8 message");
 
-                        let name_and_message: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
+                        let deserialized: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
 
-                        for (key, value) in &name_and_message {
+                        for (key, value) in &deserialized {
                             println!("{} (ID: {}) {} \n{}", 
                                 format!("{}", key).bold().yellow(), 
                                 format!("(ID: {})", addr.to_string()).bold().purple(), 
