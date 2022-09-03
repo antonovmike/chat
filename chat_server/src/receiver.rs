@@ -7,7 +7,7 @@ use crate::structures::{UserData, UserID};
 use colored::Colorize;
 use serde_json;
 
-const STRUCT_SIZE: usize = 96;
+const DATA_SIZE: usize = 96;
 
 fn sleep() { thread::sleep(Duration::from_millis(100)); }
 
@@ -21,7 +21,7 @@ pub fn receiver(server: TcpListener) {
             clients.push(socket.try_clone().expect("Failed to clone client"));
 
             thread::spawn(move || loop {
-                let mut buff_serde = vec![0; STRUCT_SIZE];
+                let mut buff_serde = vec![0; DATA_SIZE];
                 match socket.read_exact(&mut buff_serde) {
                     Ok(_) => {
                         let serde_content = buff_serde
