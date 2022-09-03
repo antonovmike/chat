@@ -33,15 +33,12 @@ pub fn receiver(server: TcpListener) {
                         let name_and_message: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
 
                         for (key, value) in &name_and_message {
-                            println!("{} (ID: {}): \n{}", format!("{}", key).bold().yellow(), addr.to_string(), value);
+                            println!("{} (ID: {}) {} \n{}", 
+                                format!("{}", key).bold().yellow(), 
+                                format!("(ID: {})", addr.to_string()).bold().purple(), 
+                                format!("said:").bold().yellow(),
+                                format!("\"{}\"", value).italic().on_green());
                         }
-
-                        // println!("{} {} {} \n{}", 
-                        //     format!("{}", user_id.data.name).bold().yellow(),
-                        //     format!("(ID: {})", user_id.id).bold().purple(),
-                        //     format!("said:").bold().yellow(),
-                        //     format!("\"{}\"", user_id.data.message).italic().on_green()
-                        // );
 
                         tx1.send(serde_message).expect("Failed to send message to rx");
                     },
