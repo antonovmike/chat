@@ -3,7 +3,6 @@ use std::net::TcpListener;
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
-// use crate::structures::{UserData, UserID};
 use colored::Colorize;
 use serde_json;
 use std::collections::HashMap;
@@ -34,7 +33,7 @@ pub fn receiver(server: TcpListener) {
                         let name_and_message: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
 
                         for (key, value) in &name_and_message {
-                            println!("{} (id {}): \n{}", key, addr.to_string(), value);
+                            println!("{} (ID: {}): \n{}", format!("{}", key).bold().yellow(), addr.to_string(), value);
                         }
 
                         // println!("{} {} {} \n{}", 
