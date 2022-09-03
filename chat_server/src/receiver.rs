@@ -3,7 +3,7 @@ use std::net::TcpListener;
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
-use crate::structures::{UserData, UserID};
+// use crate::structures::{UserData, UserID};
 use colored::Colorize;
 use serde_json;
 use std::collections::HashMap;
@@ -31,7 +31,7 @@ pub fn receiver(server: TcpListener) {
                             .collect::<Vec<_>>();
                         let serde_message = String::from_utf8(serde_content).expect("Invalid utf8 message");
 
-                        let mut name_and_message: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
+                        let name_and_message: HashMap<String, String> = serde_json::from_str(&serde_message).expect("Could not read");
                         println!("{} {} said: ", name_and_message["Mike"], addr.to_string());
                         // let deserialized: UserData = serde_json::from_str(&serde_message).expect("Could not read");
 

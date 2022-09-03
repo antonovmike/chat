@@ -4,7 +4,7 @@ use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
 use colored::Colorize;
-use crate::structures::UserData;
+// use crate::structures::UserData;
 use std::collections::HashMap;
 
 const STRUCT_SIZE: usize = 96;
@@ -22,10 +22,10 @@ pub fn transmitter(mut client: TcpStream) {
     thread::spawn(move || loop {
         match rx.try_recv() {
             Ok(user_message) => {
-                let user_data = UserData {
-                    name: user_name.clone(),
-                    message: user_message.clone(),
-                };
+                // let user_data = UserData {
+                //     name: user_name.clone(),
+                //     message: user_message.clone(),
+                // };
 
                 name_and_message.insert(user_name.clone(), user_message.clone());
 
