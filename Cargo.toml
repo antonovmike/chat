@@ -1,5 +1,5 @@
 [package]
-name = "chat_user"
+name = "chat_simple"
 version = "0.1.0"
 authors = ["Mike, <AntonovMA@outlook.com>"]
 edition = "2021"

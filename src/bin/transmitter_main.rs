@@ -1,6 +1,6 @@
 use std::net::TcpStream;
 
-mod lib;
+mod transmitter_lib;
 mod transmitter;
 
 const LOCAL: &str = "127.0.0.1:6000";
