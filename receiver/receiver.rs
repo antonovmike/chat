@@ -5,7 +5,7 @@ use std::thread;
 use std::time::Duration;
 use crate::receiver_lib::{UserData, UserID};
 use colored::Colorize;
-use serde_json;
+// use serde_json;
 
 const DATA_SIZE: usize = 96;
 
