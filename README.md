@@ -1,9 +1,9 @@
 # chat
-Simple terminal chat
+Simple synchronous terminal chat
 
 ```bash
-cargo run --bin receiver_main
-cargo run --bin transmitter_main
+cargo run --bin receiver
+cargo run --bin transmitter
 ```
 
 ![text chat](https://github.com/antonovmike/chat/blob/main/Screenshot.png)

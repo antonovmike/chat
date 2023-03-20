@@ -5,10 +5,25 @@ use std::thread;
 use std::time::Duration;
 use colored::Colorize;
 use crate::transmitter_lib::UserData;
+use sqlite::State;
 
 const DATA_SIZE: usize = 96;
 
 pub fn transmitter(mut client: TcpStream) {
+    let connection = sqlite::open(":memory").unwrap();
+    let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
+    connection.execute(query).unwrap();
+    
+    let query = "SELECT * FROM users";
+    let mut statement = connection.prepare(query).unwrap();
+    while let Ok(State::Row) = statement.next() {
+        println!(
+            "{} said: {}",
+            statement.read::<String, _>("name").unwrap(), 
+            statement.read::<String, _>("message").unwrap()
+        )
+    }
+    
     println!("{}", "Enter your name".bold().on_yellow());
 	let mut user_name = String::new();
 	io::stdin().read_line(&mut user_name).expect("Failed to read line");
