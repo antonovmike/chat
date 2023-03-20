@@ -5,7 +5,7 @@ use std::thread;
 use std::time::Duration;
 use crate::receiver_lib::{UserData, UserID};
 use colored::Colorize;
-// use serde_json;
+use sqlite::State;
 
 const DATA_SIZE: usize = 96;
 
@@ -14,6 +14,11 @@ fn sleep() {
 }
 
 pub fn receiver(server: TcpListener) {
+    let connection = sqlite::open(":memory").unwrap();
+    let drop = "DROP TABLE users";
+    connection.execute(drop).unwrap();
+
+    
     let mut clients = vec![];
     let (tx, _rx) = mpsc::channel::<String>();
     
@@ -23,7 +28,9 @@ pub fn receiver(server: TcpListener) {
             clients.push(socket.try_clone().expect("Failed to clone client"));
 
             thread::spawn(move || loop {
-                let mut buff_serde = vec![0; DATA_SIZE];
+                let connection = sqlite::open(":memory").unwrap();
+                let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
+                connection.execute(query).unwrap();                let mut buff_serde = vec![0; DATA_SIZE];
                 match socket.read_exact(&mut buff_serde) {
                     Ok(_) => {
                         let serde_content = buff_serde
@@ -38,6 +45,18 @@ pub fn receiver(server: TcpListener) {
                             id: addr.to_string(),
                             data: deserialized,
                         };
+                        
+                        let query = format!("INSERT INTO users VALUES ('{}', '{}')", user_id.data.name, user_id.data.message);
+                        connection.execute(query).unwrap();
+                        
+                        let query = "SELECT * FROM users";
+                        let mut statement = connection.prepare(query).unwrap();
+                        while let Ok(State::Row) = statement.next() {
+                            println!("{} said: {}", 
+                                statement.read::<String, _>("name").unwrap(),
+                                statement.read::<String, _>("message").unwrap()
+                            )
+                        }
 
                         println!("{} {} {} \n{}", 
                             format!("{}", user_id.data.name).bold().yellow(),
