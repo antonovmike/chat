@@ -14,13 +14,14 @@ pub fn transmitter(mut client: TcpStream) {
     let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
     connection.execute(query).unwrap();
     
-    let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 1";
+    println!("Previous messages:");
+    let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 5";
     let mut statement = connection.prepare(query).unwrap();
     while let Ok(State::Row) = statement.next() {
         println!(
-            "{} said: {}",
-            statement.read::<String, _>("name").unwrap(), 
-            statement.read::<String, _>("message").unwrap()
+            "{} {}",
+            format!("{} said:", statement.read::<String, _>("name").unwrap()).bold().yellow(), 
+            format!("{}", statement.read::<String, _>("message").unwrap()).bold().green()
         )
     }
 
