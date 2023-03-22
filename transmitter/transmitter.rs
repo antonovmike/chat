@@ -30,8 +30,7 @@ pub fn transmitter(mut client: TcpStream) {
     while let Ok(State::Row) = statement.next() {
         index+= 1
     }
-    // println!("INDEX {index}");
-    
+
     println!("{}", "Enter your name".bold().on_yellow());
 	let mut user_name = String::new();
 	io::stdin().read_line(&mut user_name).expect("Failed to read line");
