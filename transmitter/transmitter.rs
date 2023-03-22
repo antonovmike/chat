@@ -49,17 +49,16 @@ pub fn transmitter(mut client: TcpStream) {
             index_inner+= 1
         }
         if index_inner > index {
-    
-        let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 1";
-        let mut statement = connection.prepare(query).unwrap();
-        while let Ok(State::Row) = statement.next() {
-        println!(
-            "{} said: {}",
-            statement.read::<String, _>("name").unwrap(), 
-            statement.read::<String, _>("message").unwrap()
-        )
-    }
-            break;
+            let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 1";
+            let mut statement = connection.prepare(query).unwrap();
+            while let Ok(State::Row) = statement.next() {
+                println!(
+                    "{} {}",
+                    format!("{} said:", statement.read::<String, _>("name").unwrap()).bold().yellow(), 
+                    format!("{}", statement.read::<String, _>("message").unwrap()).bold().green()
+                )
+            }
+            index += 1
         }
         
         match rx.try_recv() {
