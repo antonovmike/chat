@@ -46,7 +46,10 @@ pub fn receiver(server: TcpListener) {
                             data: deserialized,
                         };
                         
-                        let query = format!("INSERT INTO users VALUES ('{}', '{}')", user_id.data.name, user_id.data.message);
+                        let username = format!("{}", user_id.data.name);
+                        // let usermessage = format!("{}", user_id.data.message);
+                        let usermessage = checker(user_id.data.message.clone());
+                        let query = format!("INSERT INTO users VALUES ('{}', '{}')", username, usermessage);
                         connection.execute(query).unwrap();
 
                         println!("{} {} {} \n{}", 
@@ -69,5 +72,26 @@ pub fn receiver(server: TcpListener) {
         }
 
         sleep();
+    }
+}
+
+fn checker(message: String) -> String {
+    if message.contains('\'') {
+        let mut escapers: Vec<usize> = vec![];
+        for i in message.char_indices() {
+            if i.1 == '\'' {
+                escapers.push(i.0)
+            }
+        }
+
+        let mut replaced = message;
+        let mut index = 0;
+        for i in escapers {
+            replaced.replace_range(i+index..i+index, "\'");
+            index += 1
+        }
+        replaced
+    } else {
+        return message
     }
 }
