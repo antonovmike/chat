@@ -15,7 +15,6 @@ pub fn transmitter(mut client: TcpStream) {
     connection.execute(query).unwrap();
     
     let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 1";
-    
     let mut statement = connection.prepare(query).unwrap();
     while let Ok(State::Row) = statement.next() {
         println!(
@@ -24,6 +23,14 @@ pub fn transmitter(mut client: TcpStream) {
             statement.read::<String, _>("message").unwrap()
         )
     }
+
+    let query = "SELECT * FROM users";
+    let mut statement = connection.prepare(query).unwrap();
+    let mut index = 0;
+    while let Ok(State::Row) = statement.next() {
+        index+= 1
+    }
+    // println!("INDEX {index}");
     
     println!("{}", "Enter your name".bold().on_yellow());
 	let mut user_name = String::new();
@@ -33,6 +40,28 @@ pub fn transmitter(mut client: TcpStream) {
     let (tx, rx) = mpsc::channel::<String>();
 
     thread::spawn(move || loop {
+
+        let connection = sqlite::open(":memory").unwrap();
+        let query = "SELECT * FROM users";
+        let mut statement = connection.prepare(query).unwrap();
+        let mut index_inner = 0;
+        while let Ok(State::Row) = statement.next() {
+            index_inner+= 1
+        }
+        if index_inner > index {
+    
+        let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 1";
+        let mut statement = connection.prepare(query).unwrap();
+        while let Ok(State::Row) = statement.next() {
+        println!(
+            "{} said: {}",
+            statement.read::<String, _>("name").unwrap(), 
+            statement.read::<String, _>("message").unwrap()
+        )
+    }
+            break;
+        }
+        
         match rx.try_recv() {
             Ok(user_message) => {
                 let user_data = UserData {
