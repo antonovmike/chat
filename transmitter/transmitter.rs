@@ -14,7 +14,8 @@ pub fn transmitter(mut client: TcpStream) {
     let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
     connection.execute(query).unwrap();
     
-    let query = "SELECT * FROM users";
+    let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 1";
+    
     let mut statement = connection.prepare(query).unwrap();
     while let Ok(State::Row) = statement.next() {
         println!(
