@@ -17,28 +17,18 @@ pub fn transmitter(mut client: TcpStream) {
     println!("Previous messages:");
     let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 5";
     let mut statement = connection.prepare(query).unwrap();
-    let mut prev_mess: Vec<String> = vec![];
+    let mut prev_mess: Vec<(String, String)> = vec![];
     while let Ok(State::Row) = statement.next() {
-        // println!(
-        //     "{} {}",
-        //     format!("{} said:", statement.read::<String, _>("name").unwrap())
-        //         .bold()
-        //         .yellow(),
-        //     format!("{}", statement.read::<String, _>("message").unwrap())
-        //         .bold()
-        //         .green()
-        // )
-        prev_mess.push(format!(
-            "{} said: {}",
-            statement.read::<String, _>("name").unwrap(),
-            statement.read::<String, _>("message").unwrap()
-        ))
+        prev_mess.push((statement.read::<String, _>("name").unwrap(),
+            statement.read::<String, _>("message").unwrap())
+        );
     }
-    // println!("{:?}", prev_mess);
     prev_mess.reverse();
-    for m in prev_mess {
-        println!("{}", m.bold().green())
-    }
+        for m in prev_mess {
+            println!("{} {}", format!("{} said:", m.0).bold().yellow(),
+                m.1.bold().green()
+            )
+        }
 
     let query = "SELECT * FROM users";
     let mut statement = connection.prepare(query).unwrap();
