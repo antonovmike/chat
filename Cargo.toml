@@ -13,10 +13,12 @@ colored = "2.0.0"
 futures = "0.3.27"
 async-std = "1.12.0"
 sqlite = "0.30.4"
+tokio = { version = "1", features = ["full"] }
 
 [[bin]]
 name = "receiver"
 path = "receiver/main.rs"
+
 [[bin]]
 name = "transmitter"
 path = "transmitter/main.rs"
