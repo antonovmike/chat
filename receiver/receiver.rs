@@ -1,11 +1,11 @@
 use crate::receiver_lib::{UserData, UserID};
 use colored::Colorize;
+use sqlite::Error;
 use std::io::{ErrorKind, Read};
 use std::net::TcpListener;
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
-use sqlite::Error;
 
 const DATA_SIZE: usize = 96;
 
@@ -13,7 +13,7 @@ fn sleep() {
     thread::sleep(Duration::from_millis(100));
 }
 
-pub fn receiver(server: TcpListener) -> Result<(), Error> {
+pub async fn receiver(server: TcpListener) -> Result<(), Error> {
     let mut clients = vec![];
     let (tx, _rx) = mpsc::channel::<String>();
 

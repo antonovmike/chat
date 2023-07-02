@@ -12,6 +12,6 @@ async fn main() -> Result<(), Error> {
     server
         .set_nonblocking(true)
         .expect("Failed to initialize non-blocking");
-    receiver::receiver(server)?;
+    receiver::receiver(server).await?;
     Ok(())
 }

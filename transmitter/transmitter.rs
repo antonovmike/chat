@@ -1,16 +1,16 @@
 use crate::transmitter_lib::UserData;
 use colored::Colorize;
+use sqlite::Error;
 use sqlite::State;
 use std::io::{self, Write};
 use std::net::TcpStream;
 use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
-use sqlite::Error;
 
 const DATA_SIZE: usize = 96;
 
-pub fn transmitter(mut client: TcpStream) -> Result<(), Error> {
+pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
     let connection = sqlite::open("chat.db")?;
     let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
     connection.execute(query)?;
@@ -20,16 +20,19 @@ pub fn transmitter(mut client: TcpStream) -> Result<(), Error> {
     let mut statement = connection.prepare(query)?;
     let mut prev_mess: Vec<(String, String)> = vec![];
     while let Ok(State::Row) = statement.next() {
-        prev_mess.push((statement.read::<String, _>("name")?,
-            statement.read::<String, _>("message")?)
-        );
+        prev_mess.push((
+            statement.read::<String, _>("name")?,
+            statement.read::<String, _>("message")?,
+        ));
     }
     prev_mess.reverse();
-        for m in prev_mess {
-            println!("{} {}", format!("{} said:", m.0).bold().yellow(),
-                m.1.bold().green()
-            )
-        }
+    for m in prev_mess {
+        println!(
+            "{} {}",
+            format!("{} said:", m.0).bold().yellow(),
+            m.1.bold().green()
+        )
+    }
 
     let query = "SELECT * FROM users";
     let mut statement = connection.prepare(query)?;
