@@ -8,6 +8,8 @@ use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
 
+use crate::db::read_from_chat_db;
+
 const DATA_SIZE: usize = 96;
 
 pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
@@ -16,15 +18,9 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
     connection.execute(query)?;
 
     println!("Previous messages:");
-    let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 5";
-    let mut statement = connection.prepare(query)?;
-    let mut prev_mess: Vec<(String, String)> = vec![];
-    while let Ok(State::Row) = statement.next() {
-        prev_mess.push((
-            statement.read::<String, _>("name")?,
-            statement.read::<String, _>("message")?,
-        ));
-    }
+
+    let mut prev_mess = read_from_chat_db()?;
+    
     prev_mess.reverse();
     for m in prev_mess {
         println!(

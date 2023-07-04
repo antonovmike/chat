@@ -1,6 +1,7 @@
 use sqlite::Error;
 use std::net::TcpStream;
 
+mod db;
 mod transmitter;
 mod transmitter_lib;
 
