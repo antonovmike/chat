@@ -8,6 +8,8 @@ use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
 
+use crate::tui;
+
 const DATA_SIZE: usize = 96;
 
 pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
@@ -47,6 +49,10 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
         .read_line(&mut user_name)
         .expect("Failed to read line");
     user_name.pop();
+
+    thread::spawn(|| {
+        tui::run_ui().expect("Failed to run UI");
+    });
 
     let (tx, rx) = mpsc::channel::<String>();
 
@@ -107,19 +113,16 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
 
     println!("{}", "Write a message:".bold().on_green());
     loop {
-        // let mut buff_message = String::new();
-        // io::stdin()
-        //     .read_line(&mut buff_message)
-        //     .expect("Reading from stdin failed");
-        // let user_message = buff_message.trim().to_string();
-        // if user_message == ":quit" || tx.send(user_message).is_err() {
-        //     break;
-        // }
-
         unsafe {
-            let user_message = GLOBAL_STRING.clone();
-            if user_message == ":quit" || tx.send(user_message).is_err() {
-                break;
+            let buff_message = GLOBAL_STRING.0.clone();
+            GLOBAL_STRING = (String::new(), false);
+            if GLOBAL_STRING.1.clone() {
+                // io::stdin().read_line(&mut buff_message).expect("Reading from stdin failed");
+                // let user_message = buff_message.trim().to_string();
+                let user_message = buff_message;
+                if user_message == ":quit" || tx.send(user_message).is_err() {
+                    break;
+                }
             }
         }
     }
@@ -128,9 +131,9 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
     Ok(())
 }
 
-static mut GLOBAL_STRING: String = String::new();
+static mut GLOBAL_STRING: (String, bool) = (String::new(), false);
 
-pub fn send_text(msg: String) {
+pub fn send_text(msg: (String, bool)) {
     unsafe {
         GLOBAL_STRING = msg
     }

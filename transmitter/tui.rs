@@ -170,7 +170,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .title("Write a message:")
+                .title(" Write a message: ")
                 .title_alignment(Alignment::Center)
                 .style(Style::default().add_modifier(Modifier::BOLD)),
         );
@@ -219,7 +219,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         List::new(messages_db)
             .block(Block::default()
             .borders(Borders::ALL)
-            .title("Chat")
+            .title(" Chat ")
             .title_alignment(Alignment::Center)
             .style(Style::default().add_modifier(Modifier::BOLD))
         );
@@ -227,5 +227,5 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
 }
 
 fn share_text(msg: &String) {
-    transmitter::send_text(msg.clone());
+    transmitter::send_text((msg.clone(), true));
 }

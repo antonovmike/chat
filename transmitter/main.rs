@@ -1,6 +1,6 @@
 use sqlite::Error;
 use std::net::TcpStream;
-use std::thread;
+// use std::thread;
 
 mod transmitter;
 mod transmitter_lib;
@@ -12,9 +12,9 @@ const LOCAL: &str = "127.0.0.1:8080";
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    thread::spawn(|| {
-        tui::run_ui().expect("Failed to run UI");
-    });
+    // thread::spawn(|| {
+    //     tui::run_ui().expect("Failed to run UI");
+    // });
 
     let client = TcpStream::connect(LOCAL).expect("Stream failed to connect");
     client
