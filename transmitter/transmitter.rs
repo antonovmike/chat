@@ -8,21 +8,19 @@ use std::sync::mpsc::{self, TryRecvError};
 use std::thread;
 use std::time::Duration;
 
-use crate::db::read_from_chat_db;
+use crate::db::*;
 
 const DATA_SIZE: usize = 96;
 
 pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
-    let connection = sqlite::open("chat.db")?;
-    let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
-    connection.execute(query)?;
+    let connection = create_table()?;
 
     println!("Previous messages:");
 
     let mut prev_mess = read_from_chat_db()?;
     
     prev_mess.reverse();
-    for m in prev_mess {
+    for m in prev_mess.clone() {
         println!(
             "{} {}",
             format!("{} said:", m.0).bold().yellow(),
@@ -30,8 +28,7 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
         )
     }
 
-    let query = "SELECT * FROM users";
-    let mut statement = connection.prepare(query)?;
+    let mut statement = connection.prepare("SELECT * FROM users")?;
     let mut index = 0;
     while let Ok(State::Row) = statement.next() {
         index += 1
@@ -48,9 +45,8 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
 
     thread::spawn(move || -> Result<(), Error> {
         loop {
-            let connection = sqlite::open("chat.db")?;
-            let query = "SELECT * FROM users";
-            let mut statement = connection.prepare(query)?;
+            let connection = create_table()?;
+            let mut statement = connection.prepare("SELECT * FROM users")?;
             let mut index_inner = 0;
             while let Ok(State::Row) = statement.next() {
                 index_inner += 1

@@ -1,7 +1,21 @@
-use sqlite::{Result, State};
+use sqlite::{Result, State, Connection};
+
+pub fn create_table() -> Result<Connection> {
+    let connection = sqlite::open("chat.db")?;
+    let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
+    connection.execute(query)?;
+    Ok(connection)
+}
+
+pub fn select_from_users() {
+    todo!()
+}
 
 pub fn read_from_chat_db() -> Result<Vec<(String, String)>> {
     let connection = sqlite::open("chat.db")?;
+    let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
+    connection.execute(query)?;
+
     let query = "SELECT * FROM users ORDER BY ROWID DESC LIMIT 5";
     let mut statement = connection.prepare(query)?;
 
@@ -16,6 +30,13 @@ pub fn read_from_chat_db() -> Result<Vec<(String, String)>> {
     Ok(messages)
 }
 #[allow(unused)]
-pub fn write_to_chat_db(name: &str, message: &str) -> Result<()> {
-    todo!()
+pub fn write_to_chat_db(username: &str, usermessage: &str) -> Result<()> {
+    let connection = sqlite::open("chat.db")?;
+    let query = format!(
+        "INSERT INTO users VALUES ('{}', '{}')",
+        username, usermessage
+    );
+    connection.execute(query)?;
+
+    Ok(())
 }
