@@ -107,16 +107,31 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
 
     println!("{}", "Write a message:".bold().on_green());
     loop {
-        let mut buff_message = String::new();
-        io::stdin()
-            .read_line(&mut buff_message)
-            .expect("Reading from stdin failed");
-        let user_message = buff_message.trim().to_string();
-        if user_message == ":quit" || tx.send(user_message).is_err() {
-            break;
+        // let mut buff_message = String::new();
+        // io::stdin()
+        //     .read_line(&mut buff_message)
+        //     .expect("Reading from stdin failed");
+        // let user_message = buff_message.trim().to_string();
+        // if user_message == ":quit" || tx.send(user_message).is_err() {
+        //     break;
+        // }
+
+        unsafe {
+            let user_message = GLOBAL_STRING.clone();
+            if user_message == ":quit" || tx.send(user_message).is_err() {
+                break;
+            }
         }
     }
     println!("{}", "Bye".bold().on_blue());
 
     Ok(())
+}
+
+static mut GLOBAL_STRING: String = String::new();
+
+pub fn send_text(msg: String) {
+    unsafe {
+        GLOBAL_STRING = msg
+    }
 }
