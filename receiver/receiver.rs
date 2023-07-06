@@ -1,11 +1,16 @@
-use crate::receiver_lib::{UserData, UserID};
+use std::{
+    io::{ErrorKind, Read},
+    net::TcpListener,
+    sync::mpsc,
+    thread,
+    time::Duration,
+};
+
 use colored::Colorize;
 use sqlite::Error;
-use std::io::{ErrorKind, Read};
-use std::net::TcpListener;
-use std::sync::mpsc;
-use std::thread;
-use std::time::Duration;
+
+use crate::db::{create_table, write_to_chat_db};
+use crate::receiver_lib::{UserData, UserID};
 
 const DATA_SIZE: usize = 96;
 
@@ -24,9 +29,7 @@ pub async fn receiver(server: TcpListener) -> Result<(), Error> {
 
             thread::spawn(move || -> Result<(), Error> {
                 loop {
-                    let connection = sqlite::open("chat.db")?;
-                    let query = "CREATE TABLE if NOT EXISTS users (name CHARFIELD, message TEXT)";
-                    connection.execute(query)?;
+                    create_table()?;
 
                     let mut buff_serde = vec![0; DATA_SIZE];
                     match socket.read_exact(&mut buff_serde) {
@@ -49,11 +52,8 @@ pub async fn receiver(server: TcpListener) -> Result<(), Error> {
                             let username = format!("{}", user_id.data.name);
                             // let usermessage = format!("{}", user_id.data.message);
                             let usermessage = checker(user_id.data.message.clone());
-                            let query = format!(
-                                "INSERT INTO users VALUES ('{}', '{}')",
-                                username, usermessage
-                            );
-                            connection.execute(query)?;
+
+                            write_to_chat_db(&username, &usermessage)?;
 
                             println!(
                                 "{} {} {} \n{}",

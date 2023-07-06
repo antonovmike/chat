@@ -1,6 +1,7 @@
 use sqlite::Error;
 use std::net::TcpListener;
 
+mod db;
 mod receiver;
 mod receiver_lib;
 
