@@ -74,7 +74,7 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
                         format!("{} said:", statement.read::<String, _>("name")?)
                             .bold()
                             .yellow(),
-                        format!("{}", statement.read::<String, _>("message")?)
+                        (statement.read::<String, _>("message")?).to_string()
                             .bold()
                             .green()
                     )
@@ -116,7 +116,7 @@ pub async fn transmitter(mut client: TcpStream) -> Result<(), Error> {
         unsafe {
             let buff_message = GLOBAL_STRING.0.clone();
             GLOBAL_STRING = (String::new(), false);
-            if GLOBAL_STRING.1.clone() {
+            if GLOBAL_STRING.1 {
                 // io::stdin().read_line(&mut buff_message).expect("Reading from stdin failed");
                 // let user_message = buff_message.trim().to_string();
                 let user_message = buff_message;

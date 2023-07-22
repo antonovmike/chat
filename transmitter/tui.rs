@@ -198,7 +198,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .iter()
         .enumerate()
         .map(|(_i, m)| {
-            let content = vec![Spans::from(Span::raw(format!("{}", m)))];
+            let content = vec![Spans::from(Span::raw(m.to_string()))];
             ListItem::new(content)
         })
         .collect();
@@ -207,7 +207,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .iter().rev().take(7)
         .enumerate()
         .map(|(_i, m)| {
-            let content = vec![Spans::from(Span::raw(format!("{}", m)))];
+            let content = vec![Spans::from(Span::raw(m.to_string()))];
             share_text(m);
             ListItem::new(content)
         })
@@ -226,6 +226,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     f.render_widget(messages, chunks[0]);
 }
 
-fn share_text(msg: &String) {
-    transmitter::send_text((msg.clone(), true));
+fn share_text(msg: &str) {
+    transmitter::send_text((msg.to_owned(), true));
 }

@@ -46,7 +46,7 @@ pub async fn receiver(server: TcpListener) -> Result<(), Error> {
                                 data: deserialized,
                             };
 
-                            let username = format!("{}", user_id.data.name);
+                            let username = user_id.data.name.to_string();
                             // let usermessage = format!("{}", user_id.data.message);
                             let usermessage = checker(user_id.data.message.clone());
                             let query = format!(
